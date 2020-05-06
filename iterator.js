@@ -1,3 +1,4 @@
+'user strict'
 /**
  * 練習重點：
  * JavaScript 之 Iterator
