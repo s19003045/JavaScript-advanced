@@ -86,3 +86,226 @@ var Tree = class Tree {
 }
 
 
+//===== 使用 class 或函式建構式來建立 linked list====
+// 方法一：使用 class 來建立 (JavaScript 並無真正的 class, class 只是語法糖)
+// 建立實例時，並不是用 class 來建立實例，而是用 constructor 來建立
+class ListNode {
+  constructor(val) {
+    this.val = val
+    this.next = null
+  }
+}
+
+// 將陣列中的值轉成 linked list
+let head, current
+const store = [1, 2, 3, 4, 5, 6]
+for (i = 0; i < store.length; i++) {
+  if (i === 0) {
+    head = new ListNode(store[i])
+    current = head
+  } else {
+    current.next = new ListNode(store[i])
+    current = current.next
+  }
+}
+console.log('head:', head)
+/**
+ * 印出結果：
+head: ListNode {
+  val: 1,
+  next: ListNode { val: 2, next: ListNode { val: 3, next: [ListNode] } }
+}
+ */
+
+//方法二：使用函式建構式來建立 liked list
+function Node(val) {
+  this.val = val
+  this.next = null
+}
+
+// 將陣列中的值轉成 linked list
+let headNode, currentNode
+const storeNodes = [1, 2, 3, 4, 5, 6]
+for (i = 0; i < storeNodes.length; i++) {
+  if (i === 0) {
+    headNode = new Node(storeNodes[i])
+    currentNode = headNode
+  } else {
+    currentNode.next = new Node(storeNodes[i])
+    currentNode = currentNode.next
+  }
+}
+console.log('headNode:', headNode)
+/**
+印出結果：
+headNode: Node {
+  val: 1,
+  next: Node { val: 2, next: Node { val: 3, next: [Node] } }
+}
+ */
+
+
+// 接續前面，建立 prototype 的方法：get, addAtHead, addAtTail, addAtIndex, deleteAtIndex
+// 透過 constructor 建立的實例都可以透過原型鏈(prototype chain) 取用上述這些方法
+/**
+ * Initialize your data structure here.
+ */
+var MyLinkedList = function () {
+  this.head = null;
+  this.size = 0;
+};
+
+/**
+ * Get the value of the index-th node in the linked list. If the index is invalid, return -1. 
+ * @param {number} index
+ * @return {number}
+ */
+MyLinkedList.prototype.get = function (index) {
+  if (index < 0 || index >= this.size) {
+    return -1;
+  }
+
+  let cur = this.head;
+  for (let i = 0; i < index; i++) {
+    cur = cur.next;
+  }
+  return cur.val;
+};
+
+/**
+ * Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. 
+ * @param {number} val
+ * @return {void}
+ */
+MyLinkedList.prototype.addAtHead = function (val) {
+  let cur = this.head;
+  this.head = new Node(val);
+  this.head.next = cur;
+  this.size++;
+};
+
+/**
+ * Append a node of value val to the last element of the linked list. 
+ * @param {number} val
+ * @return {void}
+ */
+MyLinkedList.prototype.addAtTail = function (val) {
+  let cur = this.head;
+  while (cur.next) {
+    cur = cur.next;
+  }
+
+  let newNode = new Node(val);
+
+  if (!cur) {
+    this.head = newNode
+  } else {
+    cur.next = newNode
+  }
+  this.size++;
+};
+
+/**
+ * Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. 
+ * @param {number} index 
+ * @param {number} val
+ * @return {void}
+ */
+MyLinkedList.prototype.addAtIndex = function (index, val) {
+  if (index < 0) {
+    return;
+  }
+
+  if (index === 0) {
+    this.addAtHead(val);
+    return;
+  }
+
+  let cur = this.head;
+  for (let i = 0; i < index - 1; i++) {
+    cur = cur.next;
+  }
+
+  if (!cur) {
+    return;
+  }
+
+  let next = cur.next;
+  cur.next = new Node(val);
+  cur.next.next = next;
+  this.size++;
+};
+
+/**
+ * Delete the index-th node in the linked list, if the index is valid. 
+ * @param {number} index
+ * @return {void}
+ */
+MyLinkedList.prototype.deleteAtIndex = function (index) {
+  if (index < 0 || index >= this.size) {
+    return;
+  }
+
+  this.size--;
+
+  if (index === 0) {
+    this.head = this.head.next;
+    return;
+  }
+
+  let cur = this.head;
+  for (let i = 0; i < index - 1; i++) {
+    cur = cur.next;
+  }
+
+  cur.next = cur.next.next;
+};
+
+/**
+ * Your MyLinkedList object will be instantiated and called as such:
+ * var obj = Object.create(MyLinkedList).createNew()
+ * var param_1 = obj.get(index)
+ * obj.addAtHead(val)
+ * obj.addAtTail(val)
+ * obj.addAtIndex(index,val)
+ * obj.deleteAtIndex(index)
+ */
+
+var linkedList = new MyLinkedList()
+
+console.log('linkedList:', linkedList)
+linkedList.addAtHead(3)
+console.log('linkedList:', linkedList)
+
+// 使用 instance.__proto__ 取得 Constructor.prototype
+console.log('likedList:', linkedList.__proto__)
+
+//EC6(ECMAScript 2015) 已將Object.getPrototypeOf()標準化 :
+//為了更好的支援，建議使用Object.getPrototypeOf() 。
+//應儘量避免使用 instance.__prototype__。
+console.log('Object.getPrototypeOf():', Object.getPrototypeOf(linkedList))
+
+//使用 Constructor.prototype 
+console.log('MyLinkedList.prototype:', MyLinkedList.prototype)
+
+console.log('MyLinkedList.prototype === Object.getPrototypeOf(linkedList)  =>  ', MyLinkedList.prototype === Object.getPrototypeOf(linkedList))
+console.log('MyLinkedList.prototype === linkedList.__proto__   =>  ', MyLinkedList.prototype === linkedList.__proto__)
+console.log('Object.getPrototypeOf(linkedList) === linkedList.__proto__:', Object.getPrototypeOf(linkedList) === linkedList.__proto__)
+
+
+// MyLinkedList.__proto__ 指向誰？  Function.prototype
+console.log('MyLinkedList.__proto__ === Function.prototype  =>  ', MyLinkedList.__proto__ === Function.prototype)
+// Function.prototype.__prototype__ 指向誰？  Object.prototype
+console.log('Function.__proto__===Object.prototype  =>  ', Function.prototype.__proto__ === Object.prototype)
+// Object.prototype.__proto__  指向誰？  null
+console.log('Object.prototype.__proto__  =>  ', Object.prototype.__proto__)
+
+
+// 如何知道 某方法 是實例自己本身的，還是 __porto__ 擁有的？ 使用 hasOwnProperty()
+// hasOwnProperty() 裡面記得加 '...' 引號
+console.log('linkedList.hasOwnProperty("addAtHead")   =>  ', linkedList.hasOwnProperty('addAtHead'))  //false
+console.log('linkedList.__proto__.hasOwnProperty("addAtHead")   =>  ', linkedList.__proto__.hasOwnProperty('addAtHead'))  //true
+
+// 為實例本身建立一個方法
+linkedList.say = function (msg) { console.log(msg) }
+console.log('linkedList.hasOwnProperty("say")   =>  ', linkedList.hasOwnProperty('say'))  //true
