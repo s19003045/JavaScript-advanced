@@ -8,6 +8,10 @@
 // 類別不具 hoisting, 函式有 hoisting
 // 所以在使用類別建立 instance 之前，必須先宣告之
 
+// JavaScript中沒有真正的「類別」實體。
+// class 宣告出來的本體是「函式」。
+// 換句話說，class 只是宣告函式的一種特別的語法。
+
 /**
  * 建立類別有二種方式：
  * 
@@ -18,7 +22,8 @@ class Car {
     this.name = name   // this 指透過 contructor 建立的實例本身 
     this.color = color   // this 指透過 contructor 建立的實例本身
   }
-  // 建立實例自己本身的方法(不是 prototype，這些方法並沒有要共用)，如下四個：
+  // 修正：
+  // 建立 prototype 的方法，如下四個：
   setName(name) {   // 改變 實例的 name
     this.name = name
   }
@@ -46,8 +51,8 @@ class Car {
   console.log(msg)
 }
 
-console.log('Car.prototype  =>  ', Car.prototype)
-// 印出   =>   Car.prototype  =>   Car { getColor1: [Function] }
+console.log('Car.prototype.getName  =>  ', Car.prototype.getName)
+// 印出   =>   Car.prototype.getName  =>   [Function: getName]
 
 console.log('Car', Car)
 // 印出   =>   Car [Function: Car] { sayHello: [Function] }
@@ -64,6 +69,10 @@ console.log('toyota.getColor()   =>  ', toyota.getColor())
 toyota.setName('Benze')
 console.log('toyota  =>', toyota)
 // 印出：  toyota  => Car { name: 'Benze', color: 'blue' }
+console.log('toyota.__proto__   =>  ', toyota.__proto__)
+// 印出：  toyota.__proto__   =>   Car { getColor1: [Function] }
+console.log('Car.prototype   =>  ', Car.prototype)
+// 印出：  Car.prototype   =>   Car { getColor1: [Function] }
 
 // console.log('toyota.sayHello()  => ', toyota.sayHello('good bye'))
 // 印出：TypeError: toyota.sayHello is not a function
