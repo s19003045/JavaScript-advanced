@@ -309,3 +309,34 @@ console.log('linkedList.__proto__.hasOwnProperty("addAtHead")   =>  ', linkedLis
 // 為實例本身建立一個方法
 linkedList.say = function (msg) { console.log(msg) }
 console.log('linkedList.hasOwnProperty("say")   =>  ', linkedList.hasOwnProperty('say'))  //true
+
+
+
+// ====== 如何知道 A 是不是 B 的 instance
+// 使用 instanceOf
+console.log('linkedList instanceof MyLinkedList   =>  ', linkedList instanceof MyLinkedList)  //true
+console.log('linkedList instanceof Function   =>  ', linkedList instanceof Function)  //false
+console.log('linkedList instanceof Array   =>  ', linkedList instanceof Array)  //false
+console.log('linkedList instanceof Object   =>  ', linkedList instanceof Object)  //true
+
+console.log('Function instanceof Object   =>  ', Function instanceof Object)  //true
+
+
+
+// ====== 物件的 prototype 帶有 constructor 屬性
+console.log('linkedList.constructor === MyLinkedList   =>  ', linkedList.constructor === MyLinkedList) //true
+console.log('MyLinkedList.prototype.constructor === MyLinkedList   =>  ', MyLinkedList.prototype.constructor === MyLinkedList) //true
+console.log('MyLinkedList.hasOwnProperty("constructor")   =>   ', MyLinkedList.prototype.hasOwnProperty('constructor'))  //true
+
+
+
+// 關於 new 這個字
+var secondLinkedList = new MyLinkedList()
+/**
+ * 上面做了幾件事：
+ * 1.創建一個物件 取名為 O
+ * 2.把 O 的 __proto__ 指向  MyLinkedList 的 prototype
+ * 3.呼叫 MyLinkedList 的 constructor 來建構 O
+ * 4.回傳 O 給 secondLinkedList
+ *
+ */
