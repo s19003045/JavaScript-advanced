@@ -98,3 +98,21 @@ console.log(article.__proto__)   // print: Article {}
  * 可見 實例 article.__proto__ 不包含靜態方法
  * 或可以說，Article 類別的 prototype 不包含靜態方法 compare
  */
+
+
+class Article10 {
+  constructor(title, date) {
+    this.title = title;
+    this.date = date;
+  }
+
+  static createTodays() {
+    // 记住 this = Article
+    return new this("Today's digest", new Date());
+  }
+}
+
+let article10 = Article10.createTodays();
+
+console.log(article10.title); // Today's digest
+console.log(article10.date)  // 2020-05-14T15:59:39.031Z
