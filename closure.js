@@ -192,3 +192,65 @@ const fastFoodService = (function FastFood() {
 fastFoodService.buyFrenchFries(50)
 fastFoodService.buyFrenchFries(3)
 fastFoodService.buyHamburger(20)
+
+
+// 上述即為模組的建立方式之一
+// 延伸：如何管理多個模組?
+
+// 建立：模組依存性載入器（Module Dependency Loader）
+var MyModules = (function Manager() {
+  var modules = {};
+
+  function define(name, deps, impl) {
+    for (var i = 0; i < deps.length; i++) {
+      deps[i] = modules[deps[i]]; // (1)
+    }
+    modules[name] = impl.apply(null, deps); // (2)
+  }
+
+  function get(name) {
+    return modules[name];
+  }
+
+  return {
+    define: define,
+    get: get,
+  };
+})();
+
+
+//利用模組依存性載入器
+// bar 沒有需要任何其他的模組...
+MyModules.define('bar', [], function barImpl() {
+  function hello(who) {
+    return 'Let me introduce: ' + who;
+  }
+
+  function world() {
+    return 'Hello World';
+  }
+
+  return {
+    hello: hello,
+  };
+});
+
+// foo 需要 bar 模組...
+MyModules.define('foo', ['bar'], function fooImpl(bar) {
+  var hungry = 'hippo';
+
+  function awesome() {
+    console.log(bar.hello(hungry).toUpperCase());
+  }
+
+  return {
+    awesome: awesome,
+  };
+});
+
+var bar = MyModules.get('bar');
+var foo = MyModules.get('foo');
+
+console.log(bar.hello('hippo')); // Let me introduce: hippo
+
+foo.awesome(); // LET ME INTRODUCE: HIPPO
